@@ -2,7 +2,7 @@ import { HttpContext } from '@adonisjs/core/http'
 
 export default class AuthController {
     async showLogin({ view }: HttpContext) {
-        return view.render('auth/login')
+        return view.render('pages/auth/login')
     }
 
     async login({ auth, request, response, session }: HttpContext) {
