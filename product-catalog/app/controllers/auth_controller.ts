@@ -9,6 +9,17 @@ export default class AuthController {
         const email = request.input('email')
         const password = request.input('password')
 
+        try {
+            await auth.use('web').attempt(email, password)
+            response.redirect('/')
+        } catch {
+            session.flash('error', 'Invalid credentials')
+            response.redirect('/login')
+        }
+    }
 
+    public async logout({ auth, response }: HttpContextContract) {
+        await auth.logout()
+        response.redirect('/')
     }
 }
