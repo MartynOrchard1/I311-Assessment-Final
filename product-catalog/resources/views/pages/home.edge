@@ -86,7 +86,12 @@
           </svg>
         </a>
       </div>
+      @if(auth.user)
+      <h1>Welcome back {{ auth.user.fullName }}</h1>
+      @else
+      <h1>Welcome guest</h1>
 
+      @endif
       {{-- Bento with documentation, Adocasts, packages and Discord --}}
       <div
         class="isolate mt-10 max-w-screen-xl mx-auto px-16 xl:px-8 grid grid-cols-1 xl:grid-cols-2 xl:grid-rows-3 gap-8"
