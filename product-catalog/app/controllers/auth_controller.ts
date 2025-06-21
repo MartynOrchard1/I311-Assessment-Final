@@ -5,5 +5,7 @@ export default class AuthController {
         return view.render('auth/login')
     }
 
-    
+    public async login({ auth, request, response, session }: HttpContext) {
+        
+    }
 }
