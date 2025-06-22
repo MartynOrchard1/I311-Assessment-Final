@@ -5,6 +5,7 @@ import Category from '#models/category'
 
 export default class ProductsController {
 public async index({ view, request, auth }: HttpContext) {
+    const csrfToken = request.csrfToken
     const page = request.input('page', 1)
     const perPage = 9 // Customize how many products per page
 
@@ -33,11 +34,12 @@ public async index({ view, request, auth }: HttpContext) {
     // Get all categories for the filter dropdown
     const categories = await Category.all()
 
-    return view.render('pages/home', {
+    return view.render('components/home', {
       products,
       categories,
       search,
       categoryFilter,
+      csrfToken,
       user: auth.user,
     })
   }
