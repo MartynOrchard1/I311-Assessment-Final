@@ -42,7 +42,7 @@ router.post('/logout', '#controllers/auth_controller.logout')
 // Product routes - all protected
 router
   .group(() => {
-    router.get('/dashboard/products/:id', [ProductsController, 'show']).as('admin.products.show')
+    router.get('/dashboard/products/:id', [ProductsController, 'show']).as('admin.products.show') // Admin product details
     router.get('/dashboard', '#controllers/products_controller.dashboard').as('dashboard') // Dashboard route
     router.get('/products/create', '#controllers/products_controller.create').as('products.create') // Create product form
     router.post('/products', '#controllers/products_controller.store').as('products.store') // Store new product
