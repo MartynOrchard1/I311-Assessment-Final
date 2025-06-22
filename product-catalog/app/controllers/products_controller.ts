@@ -4,7 +4,7 @@ import Product from '#models/product'
 export default class ProductsController {
     async index({ view }: HttpContext) {
         const products = await Product.all()
-        return view.render('pages/dashboard', { products })
+        return view.render('pages/dashboard', { products })  
     }
 
     async create({ view }: HttpContext) {

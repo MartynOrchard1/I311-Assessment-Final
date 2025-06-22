@@ -1,8 +1,8 @@
-@extends('layouts/app')
+@layout('pages/layouts/app')
 
 @section('content')
   <h1>Dashboard</h1>
-  <p>Welcome, {{ auth.user?.fullName }}</p>
+  <p>Welcome, Test User</p>
 
   <a href="/products/create">+ Add Product</a>
 
@@ -14,16 +14,16 @@
       <th>Image</th>
       <th>Actions</th>
     </tr>
-
     @each(product in products)
       <tr>
         <td>{{ product.name }}</td>
         <td>${{ product.price }}</td>
+        <td>—</td>
         <td>
-          @if(product.imageUrl)
-            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" width="60" />
-          @else
+          @if(!product.image_url)
             No image
+          @else
+            <p>No image available</p>
           @endif
         </td>
         <td>
