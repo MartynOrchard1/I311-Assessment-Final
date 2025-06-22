@@ -7,7 +7,10 @@
 |
 */
 
+// Imports
 import router from '@adonisjs/core/services/router'
+import { middleware } from '#start/kernel'
+
 
 // DEBUG TO SEE IF HASHING IS WORKING
 // Uncomment the following lines to test password hashing and verification result should be true
@@ -21,7 +24,6 @@ import router from '@adonisjs/core/services/router'
 
 //   return { valid: result }
 // })
-import { middleware } from '#start/kernel'
 
 // Home Page - DEFAULT ROUTE
 router.on('/').render('pages/home')
