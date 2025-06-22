@@ -1,23 +1,40 @@
 @extends('layouts/app')
 
 @section('content')
+  <h1>Dashboard</h1>
+  <p>Welcome, {{ auth.user?.fullName }}</p>
 
-<h1>Dashboard</h1>
-<p>Welcome, {{ auth.user?.fullName }}</p>
+  <a href="/products/create">+ Add Product</a>
 
-<a href="/products/create">+ Add Products</a>
-
-<table border="1">
+  <table border="1">
     <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Category</th>
-        <th>Image</th>
-        <th>Actions</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Image</th>
+      <th>Actions</th>
     </tr>
 
     @each(product in products)
-    <tr>
-        <td>{{ product.name}} </td>
-    </tr>
-</table>
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.category.name }}</td>
+        <td>
+          @if(product.imageUrl)
+            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" width="60" />
+          @else
+            No image
+          @endif
+        </td>
+        <td>
+          <a href="/products/{{ product.id }}/edit">Edit</a>
+          <form method="POST" action="/products/{{ product.id }}/delete" style="display:inline;">
+            @csrf
+            <button type="submit" onclick="return confirm('Delete this product?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+    @endeach
+  </table>
+@endsection
