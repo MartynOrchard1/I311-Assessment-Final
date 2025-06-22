@@ -55,6 +55,4 @@ export default class ProductsController {
 
         return response.redirect().toRoute('dashboard')
     }
-
-
 }
