@@ -1,17 +1,20 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { cuid } from '@adonisjs/core/helpers'
 import Product from '#models/product'
+import Category from '#models/category'
+
 
 export default class ProductsController {
     async index({ view, request }: HttpContext) {
-    const products = await Product.all()
-    const csrfToken = request.csrfToken
-    return view.render('pages/dashboard', { products, csrfToken })
+        const products = await Product.all()
+        const csrfToken = request.csrfToken
+        return view.render('pages/dashboard', { products, csrfToken })
     }
 
     async create({ view, request }: HttpContext) {
-    const csrfToken = request.csrfToken
-    return view.render('pages/products/create', { csrfToken })
+        const csrfToken = request.csrfToken
+        const categories = await Category.all()
+        return view.render('pages/products/create', { csrfToken, categories })
     }
 
     async store({ request, response, session }: HttpContext) {
@@ -36,13 +39,17 @@ export default class ProductsController {
     }
 
     async edit({ params, view, response }: HttpContext) {
-    const product = await Product.find(params.id)
+        const product = await Product.find(params.id)
+        const categories = await Category.all()
 
-    if (!product) {
-        return response.redirect().toRoute('dashboard') // Optional: render 404
-    }
+        if (!product) {
+            return response.redirect().toRoute('dashboard') // Optional: render 404
+        }
 
-    return view.render('pages/products/edit', { product })
+        return view.render('pages/products/edit', {
+            product,
+            categories,
+        })
     }
 
     async update({ params, request, response, session }: HttpContext) {
