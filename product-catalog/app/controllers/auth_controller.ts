@@ -1,5 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
+// import hash from '@adonisjs/core/services/hash'
 
 export default class AuthController {
     async showLogin({ view }: HttpContext) {
@@ -10,26 +11,35 @@ export default class AuthController {
         const email = request.input('email')
         const password = request.input('password')
 
-        console.log('EMAIL:', email)
-        console.log('PASSWORD:', password)
+        console.log('Login attempt:', { email, password })
 
-        try {
-            // Manually fetch the user by email
-            const user = await User.findByOrFail('email', email)
+        const user = await User.findBy('email', email)
 
-            // Use verifyCredentials to validate the password
-            await auth.use('web').login(user, password)
-
-
-            return response.redirect('/')
-        } catch (error) {
-            session.flash('error', 'Invalid credentials')
-            return response.redirect('/login')
+        if (!user) {
+            console.log(`❌ User not found: ${email}`)
+            session.flash('errors', { email: 'Invalid email or password' })
+            return response.redirect().back()
         }
+
+        // 🔍 Debugging output
+        console.log('Stored hash:', user.password)
+
+        const isValid = await user.verifyPassword(password)
+        console.log('Password match result:', isValid)
+
+        if (!isValid) {
+            console.log(`Invalid password for: ${email}`)
+            session.flash('errors', { email: 'Invalid email or password' })
+            return response.redirect().back()
+        }
+
+        await auth.use('web').login(user)
+        console.log(`Logged in: ${email}`)
+        return response.redirect('/')
     }
 
     async logout({ auth, response }: HttpContext) {
-            await auth.use('web').logout()
-            return response.redirect('/')
-        }
+        await auth.use('web').logout()
+        return response.redirect('/')
     }
+}
