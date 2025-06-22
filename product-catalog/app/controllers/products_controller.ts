@@ -40,20 +40,6 @@ export default class ProductsController {
         })
     }
 
-    public async show({ params, view, auth }: HttpContext) {
-        const product = await Product.query()
-            .where('id', params.id)
-            .preload('category')
-            .firstOrFail()
-
-        return view.render('pages/product_details', {
-            product,
-            user: auth.user,
-            csrfToken: view.sharedData?.csrfToken,
-        })
-    }
-
-
     async create({ view, request }: HttpContext) {
         const csrfToken = request.csrfToken
         const categories = await Category.all()
@@ -129,5 +115,20 @@ export default class ProductsController {
         }
 
         return response.redirect().toRoute('dashboard')
+    }
+
+    public async show({ params, view, auth, request }: HttpContext) {
+        const csrfToken = request.csrfToken
+
+        const product = await Product.query()
+            .where('id', params.id)
+            .preload('category')
+            .firstOrFail()
+
+        return view.render('pages/product_details', {
+            product,
+            user: auth.user,
+            csrfToken
+        })
     }
 }
