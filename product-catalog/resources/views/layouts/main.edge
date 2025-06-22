@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@yield('title', 'Product Catalog')</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+
+    {{-- Navigation Bar --}}
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">
+          <a href="{{ route('home') }}">Product Catalog</a>
+        </h1>
+        <nav class="space-x-4">
+          @if(auth?.user)
+            <span>Welcome, {{ auth.user.fullName }}</span>
+            <a href="{{ route('dashboard') }}" class="text-blue-600 hover:underline">Dashboard</a>
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+              @csrf()
+              <button class="text-red-600 hover:underline">Logout</button>
+            </form>
+          @else
+            <a href="{{ route('login.show') }}" class="text-blue-600 hover:underline">Login</a>
+          @endif
+        </nav>
+      </div>
+    </header>
+
+    {{-- Flash messages --}}
+    @if(flashMessages.success)
+      <div class="bg-green-100 text-green-800 text-sm p-4 text-center">
+        {{ flashMessages.success }}
+      </div>
+    @endif
+
+    @if(flashMessages.error)
+      <div class="bg-red-100 text-red-800 text-sm p-4 text-center">
+        {{ flashMessages.error }}
+      </div>
+    @endif
+
+    {{-- Main Content --}}
+    <main>
+      @section('content')
+        <p class="text-center py-10">No content provided.</p>
+      @endsection
+    </main>
+
+    {{-- Optional footer --}}
+    <footer class="text-center text-xs text-gray-500 mt-10 py-6">
+      &copy; {{ new Date().getFullYear() }} Product Catalog — Martyn Orchard - 21356032
+    </footer>
+  </body>
+</html>
