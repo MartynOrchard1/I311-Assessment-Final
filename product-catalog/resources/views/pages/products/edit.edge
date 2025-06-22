@@ -1,0 +1,44 @@
+@component('layouts/app')
+  @slot('main')
+    <form action="/products/{{ product.id }}" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      <div>
+        <label>Name:</label>
+        <input type="text" name="name" value="{{ product.name }}" required>
+      </div>
+
+      <div>
+        <label>Price:</label>
+        <input type="text" name="price" value="{{ product.price }}" required>
+      </div>
+
+      <div>
+        <label>Description:</label>
+        <textarea name="description">{{ product.description }}</textarea>
+      </div>
+
+      <div>
+        <label>Image:</label>
+        <input type="file" name="image" accept="image/*">
+        @if(product.image_url)
+          <p>Current: <img src="{{ product.image_url }}" alt="Product image" width="100"></p>
+        @endif
+      </div>
+
+      <div>
+        <label>Category:</label>
+        <select name="category_id" required>
+          @each(category in categories)
+            <option value="{{ category.id }}" {{ category.id === product.categoryId ? 'selected' : '' }}>
+              {{ category.name }}
+            </option>
+          @endeach
+        </select>
+    </div>
+
+
+      <button type="submit">Update</button>
+    </form>
+  @endslot
+@endcomponent
