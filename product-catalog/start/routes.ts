@@ -34,10 +34,13 @@ router.get('/products/:id', '#controllers/products_controller.show').as('product
 
 
 // Login Routes
-router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin'])
-router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
-router.get('/logout', [() => import('#controllers/auth_controller'), 'logout'])
-
+router.get('/login', '#controllers/auth_controller.showLogin')
+  .as('login.show')
+router.post('/login', '#controllers/auth_controller.login')
+  .as('login')
+router.post('/logout', '#controllers/auth_controller.logout')
+  .as('logout')
+  
 // Product routes - all protected
 router
   .group(() => {
