@@ -1,6 +1,6 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import Category from '#models/category'
+import Category from './category.js'
 import { belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
@@ -19,6 +19,9 @@ export default class Product extends BaseModel {
 
   @column()
   declare image_url: string 
+
+  @column()
+  public category_id!: number
 
   @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>
