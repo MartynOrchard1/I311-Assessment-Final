@@ -2,9 +2,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Product from '#models/product'
 
 export default class ProductsController {
-    async index({ view }: HttpContext) {
-        const products = await Product.all()
-        return view.render('pages/dashboard', { products })
+    async index({ view, request }: HttpContext) {
+    const products = await Product.all()
+    const csrfToken = request.csrfToken
+    return view.render('pages/dashboard', { products, csrfToken })
     }
 
     async create({ view, request }: HttpContext) {

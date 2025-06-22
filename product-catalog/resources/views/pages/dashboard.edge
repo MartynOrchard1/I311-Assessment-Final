@@ -30,9 +30,10 @@
         </td>
         <td>
           <a href="/products/{{ product.id }}/edit">Edit</a>
-          <form method="POST" action="/products/{{ product.id }}/delete" style="display:inline;">
-            <button type="submit" onclick="return confirm('Delete this product?')">Delete</button>
-          </form>
+        <form method="POST" action="/products/{{ product.id }}/delete" style="display:inline;">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button type="submit" onclick="return confirm('Delete this product?')">Delete</button>
+        </form>
         </td>
       </tr>
     @endeach
