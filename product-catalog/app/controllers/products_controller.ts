@@ -4,7 +4,7 @@ import Product from '#models/product'
 export default class ProductsController {
     async index({ view }: HttpContext) {
         const products = await Product.all()
-        return view.render('pages/dashboard', { products })  
+        return view.render('pages/dashboard', { products })
     }
 
     async create({ view }: HttpContext) {
@@ -12,10 +12,16 @@ export default class ProductsController {
     }
 
     async store({ request, response, session }: HttpContext) {
-        const data = request.only(['name', 'price', 'description', 'image_url'])
-        await Product.create(data)
+        const data = request.only(['name', 'price', 'image_url']) 
 
-        session.flash('success', 'Product created successfully!')
+        try {
+            await Product.create(data)
+            session.flash('success', 'Product created successfully!')
+        } catch (error) {
+            console.error('Product creation failed:', error)
+            session.flash('error', 'Failed to create product.')
+        }
+
         return response.redirect().toRoute('dashboard')
     }
 
