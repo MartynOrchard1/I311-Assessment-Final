@@ -24,7 +24,18 @@ import router from '@adonisjs/core/services/router'
 
 
 router.on('/').render('pages/home')
+import { middleware } from '#start/kernel'
+
 
 router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin'])
 router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
 router.get('/logout', [() => import('#controllers/auth_controller'), 'logout'])
+
+router.get('/login', async ({ view }) => {
+  return view.render('auth/login')
+}).as('login.show').use(middleware.guest())
+
+router.post('/login', '#controllers/auth_controller.login').as('login')
+
+router.post('/logout', '#controllers/auth_controller.logout').as('logout').use(middleware.auth())
+
