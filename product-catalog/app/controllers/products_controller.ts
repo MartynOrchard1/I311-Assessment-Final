@@ -70,6 +70,8 @@ export default class ProductsController {
             imagePath = `/uploads/${fileName}`
         }
 
+        const product = await Product.create({ ...data, image_url: imagePath })
+        
         await Product.create({ ...data, image_url: imagePath })
 
         session.flash('success', 'Product created successfully!')
