@@ -2,7 +2,7 @@
   @slot('main')
     <h1>Add Product</h1>
 
-    <form action="/products" method="POST">
+    <form action="/products" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
       <div>
