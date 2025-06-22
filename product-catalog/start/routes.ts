@@ -26,17 +26,24 @@ import { middleware } from '#start/kernel'
 // })
 
 // Home Page - DEFAULT ROUTE
-router.on('/').render('pages/home')
+// router.on('/').render('pages/home')
+
+import GuestController from '#controllers/guests_controller'
+import ProductsController from '#controllers/products_controller'
 
 // Login Routes
-router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin'])
-router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
-router.get('/logout', [() => import('#controllers/auth_controller'), 'logout'])
-
+router.get('/login', '#controllers/auth_controller.showLogin')
+  .as('login.show')
+router.post('/login', '#controllers/auth_controller.login')
+  .as('login')
+router.post('/logout', '#controllers/auth_controller.logout')
+  .as('logout')
+  
 // Product routes - all protected
 router
   .group(() => {
-    router.get('/dashboard', '#controllers/products_controller.index').as('dashboard') // Dashboard route
+    router.get('/dashboard/products/:id', [ProductsController, 'show']).as('admin.products.show') // Admin product details
+    router.get('/dashboard', '#controllers/products_controller.dashboard').as('dashboard') // Dashboard route
     router.get('/products/create', '#controllers/products_controller.create').as('products.create') // Create product form
     router.post('/products', '#controllers/products_controller.store').as('products.store') // Store new product
     router.get('/products/:id/edit', '#controllers/products_controller.edit').as('products.edit') // Edit product form
@@ -44,3 +51,7 @@ router
     router.post('/products/:id/delete', '#controllers/products_controller.destroy').as('products.delete') // Delete product
   })
   .use(middleware.auth())
+
+
+router.get('/', [GuestController, 'home']).as('home')
+router.get('/products/:id', [GuestController, 'show']).as('products.show')

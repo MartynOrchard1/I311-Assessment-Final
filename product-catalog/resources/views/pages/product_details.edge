@@ -1,0 +1,17 @@
+@component('layouts/main')
+  @slot('main')
+    <div class="max-w-3xl mx-auto py-10">
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+
+
+        <div class="p-6">
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+          <p class="text-lg text-gray-700 mb-2">Price: ${{ product.price }}</p>
+          <p class="text-md text-gray-600 mb-4">Category: {{ product.category?.name || 'Uncategorized' }}</p>
+          <p class="text-gray-800">{{ product.description }}</p>
+          <img src="{{ product.image_url || '/placeholder.png' }}" alt="{{ product.name }} image " style="width: 30%; height: auto;" class="h-48 w-full object-cover">
+        </div>
+      </div>
+    </div>
+  @endslot
+@endcomponent

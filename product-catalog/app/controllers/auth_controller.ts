@@ -35,7 +35,7 @@ export default class AuthController {
 
         await auth.use('web').login(user)
         console.log(`Logged in: ${email}`)
-        return response.redirect('/')
+        return response.redirect().toPath('dashboard')
     }
 
     async logout({ auth, response }: HttpContext) {
