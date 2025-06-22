@@ -28,7 +28,7 @@ import { middleware } from '#start/kernel'
 // Home Page - DEFAULT ROUTE
 // router.on('/').render('pages/home')
 
-router.get('/', '#controllers/products_controller.index').as('home') // Home route
+router.get('/', [() => import('#controllers/products_controller'), 'index']).as('home')
 router.get('/products/:id', '#controllers/products_controller.show').as('products.show')
 
 
