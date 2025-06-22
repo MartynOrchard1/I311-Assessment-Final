@@ -15,12 +15,13 @@
         <input type="text" name="price" value="{{ product.price }}" required>
       </div>
 
+      @if(product.image_url)
       <div>
         <label>Image URL:</label>
-        <input type="text" name="image_url" value="{{ product.image_url }}">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" width="100">
       </div>
+      @endif
 
-      <button type="submit">Update</button>
     </form>
   @endslot
 @endcomponent
