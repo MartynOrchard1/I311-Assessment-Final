@@ -16,11 +16,7 @@
 
             <div class="d-flex gap-3">
             @if(auth?.user)
-                <a href="{{ route('dashboard') }}" class="text-white">Dashboard</a>
-                <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-                <button type="submit" class="btn btn-sm btn-danger">Logout</button>
-                </form>
+                welcome {{ auth.user.name }}
             @else
                 <a href="{{ route('login.show') }}" class="btn btn-sm btn-primary">Login</a>
             @endif
