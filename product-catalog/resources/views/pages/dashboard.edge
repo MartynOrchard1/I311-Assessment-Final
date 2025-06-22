@@ -20,14 +20,14 @@
       <tr>
         <td>{{ product.name }}</td>
         <td>${{ product.price }}</td>
-        <td>${{ product.description }}</td>
+        <td>{{ product.description }}</td>
         <td>|</td>
         <td>|</td>
         <td>
           @if(product.image_url)
             <img src="{{ product.image_url }}" alt={{ product.name }} width="100" />
           @else
-            No image
+           {{ product.name }}
           @endif
         </td>
         <td>
