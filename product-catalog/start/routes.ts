@@ -33,32 +33,14 @@ router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin']
 router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
 router.get('/logout', [() => import('#controllers/auth_controller'), 'logout'])
 
-// Dashboard
-router.get('/dashboard', '#controllers/products_controller.index')
-  .as('dashboard')
-  .use(middleware.auth())
-
-// Create form
-router.get('/products/create', '#controllers/products_controller.create')
-  .as('products.create')
-  .use(middleware.auth())
-
-// Store new product
-router.post('/products', '#controllers/products_controller.store')
-  .as('products.store')
-  .use(middleware.auth())
-
-// Edit form
-router.get('/products/:id/edit', '#controllers/products_controller.edit')
-  .as('products.edit')
-  .use(middleware.auth())
-
-// Update product
-router.post('/products/:id', '#controllers/products_controller.update')
-  .as('products.update')
-  .use(middleware.auth())
-
-// Delete product
-router.post('/products/:id/delete', '#controllers/products_controller.destroy')
-  .as('products.delete')
+// Product routes - all protected
+router
+  .group(() => {
+    router.get('/dashboard', '#controllers/products_controller.index').as('dashboard') // Dashboard route
+    router.get('/products/create', '#controllers/products_controller.create').as('products.create') // Create product form
+    router.post('/products', '#controllers/products_controller.store').as('products.store') // Store new product
+    router.get('/products/:id/edit', '#controllers/products_controller.edit').as('products.edit') // Edit product form
+    router.post('/products/:id', '#controllers/products_controller.update').as('products.update') // Update product
+    router.post('/products/:id/delete', '#controllers/products_controller.destroy').as('products.delete') // Delete product
+  })
   .use(middleware.auth())
