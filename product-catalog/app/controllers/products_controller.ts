@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { cuid } from '@adonisjs/core/helpers'
 import Product from '#models/product'
 
 export default class ProductsController {
@@ -14,16 +15,23 @@ export default class ProductsController {
     }
 
     async store({ request, response, session }: HttpContext) {
-        const data = request.only(['name', 'price', 'image_url']) 
+        const image = request.file('image', {
+            size: '2mb',
+            extnames: ['jpg', 'png', 'jpeg'],
+        })
 
-        try {
-            await Product.create(data)
-            session.flash('success', 'Product created successfully!')
-        } catch (error) {
-            console.error('Product creation failed:', error)
-            session.flash('error', 'Failed to create product.')
+        let imagePath = null
+
+        if (image) {
+            const fileName = `${cuid()}.${image.extname}`
+            await image.move('./public/uploads', { name: fileName })
+            imagePath = `/uploads/${fileName}`
         }
 
+        const data = request.only(['name', 'price', 'description'])
+        await Product.create({ ...data, image_url: imagePath })
+
+        session.flash('success', 'Product created successfully!')
         return response.redirect().toRoute('dashboard')
     }
 
@@ -44,7 +52,19 @@ export default class ProductsController {
             return response.redirect().toRoute('dashboard')
         }
 
-        const data = request.only(['name', 'price', 'description', 'image_url'])
+        const data = request.only(['name', 'price', 'description'])
+
+        const image = request.file('image', {
+            size: '2mb',
+            extnames: ['jpg', 'png', 'jpeg'],
+        })
+
+        if (image) {
+            const fileName = `${cuid()}.${image.extname}`
+            await image.move('./public/uploads', { name: fileName })
+            data.image_url = `/uploads/${fileName}`
+        }
+
         product.merge(data)
         await product.save()
 
