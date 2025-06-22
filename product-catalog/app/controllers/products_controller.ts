@@ -4,7 +4,7 @@ import Product from '#models/product'
 import Category from '#models/category'
 
 export default class ProductsController {
-  // ✅ Admin dashboard view only
+  // Admin dashboard view only
   public async index({ view, request }: HttpContext) {
     const products = await Product.query().preload('category')
     const csrfToken = request.csrfToken
@@ -23,14 +23,14 @@ export default class ProductsController {
     }
 
 
-  // ✅ Render product creation form
+  // Render product creation form
   public async create({ view, request }: HttpContext) {
     const csrfToken = request.csrfToken
     const categories = await Category.all()
     return view.render('pages/products/create', { csrfToken, categories })
   }
 
-  // ✅ Handle product form submission
+  // Handle product form submission
     async store({ request, response, session }: HttpContext) {
     const data = request.only(['name', 'price', 'description', 'category_id'])
 
@@ -49,11 +49,11 @@ export default class ProductsController {
 
     session.flash('success', 'Product created successfully!')
 
-    // ✅ Redirect to the new admin product details page
+    // Redirect to the new admin product details page
     return response.redirect().toRoute('admin.products.show', { id: product.id })
     }
 
-  // ✅ Edit form
+  // Edit form
   public async edit({ params, view, response }: HttpContext) {
     const product = await Product.find(params.id)
     const categories = await Category.all()
@@ -68,7 +68,7 @@ export default class ProductsController {
     })
   }
 
-  // ✅ Update product
+  // Update product
   public async update({ params, request, response, session }: HttpContext) {
     const product = await Product.find(params.id)
 
@@ -96,7 +96,7 @@ export default class ProductsController {
     return response.redirect().toRoute('dashboard')
   }
 
-  // ✅ Delete product
+  // Delete product
   public async destroy({ params, response, session }: HttpContext) {
     const product = await Product.find(params.id)
 
@@ -108,7 +108,7 @@ export default class ProductsController {
     return response.redirect().toRoute('dashboard')
   }
 
-    // ✅ Public/guest product detail page
+    // Public/guest product detail page
     public async show({ params, view, auth, request }: HttpContext) {
     const csrfToken = request.csrfToken
 
