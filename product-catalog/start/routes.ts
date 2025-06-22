@@ -29,9 +29,7 @@ import { middleware } from '#start/kernel'
 // router.on('/').render('pages/home')
 
 import GuestController from '#controllers/guests_controller'
-
-router.get('/', [GuestController, 'home']).as('home')
-router.get('/products/:id', [GuestController, 'show']).as('products.show')
+import ProductsController from '#controllers/products_controller'
 
 // Login Routes
 router.get('/login', '#controllers/auth_controller.showLogin')
@@ -44,6 +42,7 @@ router.post('/logout', '#controllers/auth_controller.logout')
 // Product routes - all protected
 router
   .group(() => {
+    router.get('/dashboard/products/:id', [ProductsController, 'show']).as('admin.products.show')
     router.get('/dashboard', '#controllers/products_controller.dashboard').as('dashboard') // Dashboard route
     router.get('/products/create', '#controllers/products_controller.create').as('products.create') // Create product form
     router.post('/products', '#controllers/products_controller.store').as('products.store') // Store new product
@@ -52,3 +51,7 @@ router
     router.post('/products/:id/delete', '#controllers/products_controller.destroy').as('products.delete') // Delete product
   })
   .use(middleware.auth())
+
+
+router.get('/', [GuestController, 'home']).as('home')
+router.get('/products/:id', [GuestController, 'show']).as('products.show')

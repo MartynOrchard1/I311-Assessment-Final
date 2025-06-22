@@ -31,22 +31,27 @@ export default class ProductsController {
   }
 
   // ✅ Handle product form submission
-  public async store({ request, response, session }: HttpContext) {
+    async store({ request, response, session }: HttpContext) {
     const data = request.only(['name', 'price', 'description', 'category_id'])
+
+    // Handle image upload
     const image = request.file('image')
     let imagePath = ''
 
     if (image) {
-      const fileName = `${cuid()}.${image.extname}`
-      await image.move('./public/uploads', { name: fileName })
-      imagePath = `/uploads/${fileName}`
+        const fileName = `${cuid()}.${image.extname}`
+        await image.move('./public/uploads', { name: fileName })
+        imagePath = `/uploads/${fileName}`
     }
 
-    await Product.create({ ...data, image_url: imagePath })
+    // Create the product
+    const product = await Product.create({ ...data, image_url: imagePath })
 
     session.flash('success', 'Product created successfully!')
-    return response.redirect().toRoute('dashboard')
-  }
+
+    // ✅ Redirect to the new admin product details page
+    return response.redirect().toRoute('admin.products.show', { id: product.id })
+    }
 
   // ✅ Edit form
   public async edit({ params, view, response }: HttpContext) {
@@ -103,19 +108,19 @@ export default class ProductsController {
     return response.redirect().toRoute('dashboard')
   }
 
-  // ✅ Public/guest product detail page
-  public async show({ params, view, auth, request }: HttpContext) {
+    // ✅ Public/guest product detail page
+    public async show({ params, view, auth, request }: HttpContext) {
     const csrfToken = request.csrfToken
 
     const product = await Product.query()
-      .where('id', params.id)
-      .preload('category')
-      .firstOrFail()
+        .where('id', params.id)
+        .preload('category')
+        .firstOrFail()
 
     return view.render('pages/product_details', {
-      product,
-      user: auth.user,
-      csrfToken
+        product,
+        user: auth.user,
+        csrfToken
     })
-  }
+    }
 }
