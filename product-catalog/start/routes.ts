@@ -28,10 +28,10 @@ import { middleware } from '#start/kernel'
 // Home Page - DEFAULT ROUTE
 // router.on('/').render('pages/home')
 
-router.get('/', [() => import('#controllers/products_controller'), 'index']).as('home')
-router.get('/products/:id', '#controllers/products_controller.show').as('products.show')
+import GuestController from '#controllers/guests_controller'
 
-
+router.get('/', [GuestController, 'home']).as('home')
+router.get('/products/:id', [GuestController, 'show']).as('products.show')
 
 // Login Routes
 router.get('/login', '#controllers/auth_controller.showLogin')
