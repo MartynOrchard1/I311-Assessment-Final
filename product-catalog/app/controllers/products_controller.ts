@@ -4,41 +4,55 @@ import Product from '#models/product'
 import Category from '#models/category'
 
 export default class ProductsController {
-public async index({ view, request, auth }: HttpContext) {
-    const page = request.input('page', 1)
-    const perPage = 9
+    public async index({ view, request, auth }: HttpContext) {
+        const page = request.input('page', 1)
+        const perPage = 9
 
-    const search = request.input('search', '').trim()
-    const categoryFilter = request.input('category', '')
+        const search = request.input('search', '').trim()
+        const categoryFilter = request.input('category', '')
 
-    const query = Product.query().preload('category')
+        const query = Product.query().preload('category')
 
-    if (search) {
-      query.where('name', 'ILIKE', `%${search}%`)
+        if (search) {
+            query.where('name', 'ILIKE', `%${search}%`)
+        }
+
+        if (categoryFilter) {
+            query.where('categoryId', categoryFilter)
+        }
+
+        const paginatedProducts = await query.paginate(page, perPage)
+        paginatedProducts.baseUrl('/')
+
+        const products = paginatedProducts.all() // Convert to array
+        const pagination = paginatedProducts.getMeta() // Extract metadata
+
+        const categories = await Category.all()
+
+        return view.render('components/home', {
+            products,
+            pagination,
+            categories,
+            search,
+            categoryFilter,
+            user: auth.user,
+            csrfToken: request.csrfToken,
+        })
     }
 
-    if (categoryFilter) {
-      query.where('categoryId', categoryFilter)
+    public async show({ params, view, auth }: HttpContext) {
+        const product = await Product.query()
+            .where('id', params.id)
+            .preload('category')
+            .firstOrFail()
+
+        return view.render('pages/product_details', {
+            product,
+            user: auth.user,
+            csrfToken: view.sharedData?.csrfToken,
+        })
     }
 
-    const paginatedProducts = await query.paginate(page, perPage)
-    paginatedProducts.baseUrl('/')
-
-    const products = paginatedProducts.all() // Convert to array
-    const pagination = paginatedProducts.getMeta() // Extract metadata
-
-    const categories = await Category.all()
-
-    return view.render('components/home', {
-      products,
-      pagination,
-      categories,
-      search,
-      categoryFilter,
-      user: auth.user,
-      csrfToken: request.csrfToken,
-    })
-  }
 
     async create({ view, request }: HttpContext) {
         const csrfToken = request.csrfToken
