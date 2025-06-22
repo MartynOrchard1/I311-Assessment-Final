@@ -21,21 +21,43 @@ import router from '@adonisjs/core/services/router'
 
 //   return { valid: result }
 // })
-
-
-router.on('/').render('pages/home')
 import { middleware } from '#start/kernel'
 
+// Home Page - DEFAULT ROUTE
+router.on('/').render('pages/home')
 
+// Login Routes
 router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin'])
 router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
 router.get('/logout', [() => import('#controllers/auth_controller'), 'logout'])
 
-router.get('/login', async ({ view }) => {
-  return view.render('auth/login')
-}).as('login.show').use(middleware.guest())
+// Dashboard
+router.get('/dashboard', '#controllers/products_controller.index')
+  .as('dashboard')
+  .use(middleware.auth())
 
-router.post('/login', '#controllers/auth_controller.login').as('login')
 
-router.post('/logout', '#controllers/auth_controller.logout').as('logout').use(middleware.auth())
+// Create form
+router.get('/products/create', '#controllers/products_controller.create')
+  .as('products.create')
+  .use(middleware.auth())
 
+// Store new product
+router.post('/products', '#controllers/products_controller.store')
+  .as('products.store')
+  .use(middleware.auth())
+
+// Edit form
+router.get('/products/:id/edit', '#controllers/products_controller.edit')
+  .as('products.edit')
+  .use(middleware.auth())
+
+// Update product
+router.post('/products/:id', '#controllers/products_controller.update')
+  .as('products.update')
+  .use(middleware.auth())
+
+// Delete product
+router.post('/products/:id/delete', '#controllers/products_controller.destroy')
+  .as('products.delete')
+  .use(middleware.auth())
