@@ -73,7 +73,7 @@
         @endif
         @for(let i = 1; i <= products.lastPage; i++)
           <li>
-            <a href="{{ products.url(i) }}"
+            <a href="{{ products.getUrl(i) }}">
                class="px-3 py-1 {{ products.currentPage === i ? 'bg-primary text-white' : 'bg-gray-100' }} rounded">
               {{ i }}
             </a>

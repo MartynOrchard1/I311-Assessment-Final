@@ -34,7 +34,7 @@ public async index({ view, request, auth }: HttpContext) {
     const categories = await Category.all()
 
     return view.render('pages/home', {
-      products: products.toJSON(),
+      products,
       categories,
       search,
       categoryFilter,
