@@ -16,5 +16,15 @@
     <input type="number" step="0.01" name="price" required />
 
     <label>Category:</label>
+    <select name="category_id" required>
+      @each(category in categories)
+        <option value="{{ category.id }}">{{ category.name }}</option>
+      @endeach
+    </select>
 
+    <label>Image:</label>
+    <input type="file" name="image" />
+
+    <button type="submit">Create</button>
+  </form>
 @endsection
