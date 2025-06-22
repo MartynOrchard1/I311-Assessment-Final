@@ -3,7 +3,7 @@
     <h1>Edit Product</h1>
 
     <form action="/products/{{ product.id }}" method="POST">
-      @csrf
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
       <div>
         <label>Name:</label>
@@ -16,13 +16,8 @@
       </div>
 
       <div>
-        <label>Description:</label>
-        <textarea name="description">{{ product.description }}</textarea>
-      </div>
-
-      <div>
         <label>Image URL:</label>
-        <input type="text" name="image_url" value="{{ product.imageUrl }}">
+        <input type="text" name="image_url" value="{{ product.image_url }}">
       </div>
 
       <button type="submit">Update</button>
