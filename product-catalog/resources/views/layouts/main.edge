@@ -10,16 +10,23 @@
   <header class="p-3 bg-dark text-white">
     <div class="container">
       <h1><a href="/" class="text-white text-decoration-none">Product Catalog</a></h1>
-      <nav>
-        @if(auth.user)
-          <form action="{{ route('logout') }}" method="POST" class="d-inline">
-            @csrf()
-            <button class="btn btn-danger btn-sm">Logout</button>
-          </form>
-        @else
-          <a href="{{ route('login.show') }}" class="text-white">Login</a>
-        @endif
-      </nav>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Product Catalog</a>
+
+            <div class="d-flex gap-3">
+            @if(auth?.user)
+                <a href="{{ route('dashboard') }}" class="text-white">Dashboard</a>
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+                <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+                </form>
+            @else
+                <a href="{{ route('login.show') }}" class="btn btn-sm btn-primary">Login</a>
+            @endif
+            </div>
+        </div>
+        </nav>
     </div>
   </header>
 
