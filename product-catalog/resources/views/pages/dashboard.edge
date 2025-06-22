@@ -16,5 +16,8 @@
         <th>Actions</th>
     </tr>
 
-    
+    @each(product in products)
+    <tr>
+        <td>{{ product.name}} </td>
+    </tr>
 </table>
