@@ -5,40 +5,40 @@ import Category from '#models/category'
 
 export default class ProductsController {
     public async index({ view, request, auth }: HttpContext) {
-        const page = request.input('page', 1)
-        const perPage = 9
+    const csrfToken = request.csrfToken
+    const page = request.input('page', 1)
+    const perPage = 9
 
-        const search = request.input('search', '').trim()
-        const categoryFilter = request.input('category', '')
+    const search = request.input('search', '').trim()
+    const categoryId = request.input('category')
 
-        const query = Product.query().preload('category')
+    const query = Product.query().preload('category')
 
-        if (search) {
-            query.where('name', 'ILIKE', `%${search}%`)
-        }
-
-        if (categoryFilter) {
-            query.where('categoryId', categoryFilter)
-        }
-
-        const paginatedProducts = await query.paginate(page, perPage)
-        paginatedProducts.baseUrl('/')
-
-        const products = paginatedProducts.all() // Convert to array
-        const pagination = paginatedProducts.getMeta() // Extract metadata
-
-        const categories = await Category.all()
-
-        return view.render('components/home', {
-            products,
-            pagination,
-            categories,
-            search,
-            categoryFilter,
-            user: auth.user,
-            csrfToken: request.csrfToken,
-        })
+    // Search filter (by name)
+    if (search) {
+        query.whereILike('name', `%${search}%`)
     }
+
+    // Category filter (by ID)
+    if (categoryId) {
+        query.where('category_id', categoryId)
+    }
+
+    const products = await query.paginate(page, perPage)
+    products.baseUrl('/')
+
+    const categories = await Category.all()
+
+    return view.render('components/home', {
+        products,
+        categories,
+        search,
+        categoryId,
+        user: auth.user,
+        csrfToken
+    })
+    }
+
 
     async create({ view, request }: HttpContext) {
         const csrfToken = request.csrfToken
