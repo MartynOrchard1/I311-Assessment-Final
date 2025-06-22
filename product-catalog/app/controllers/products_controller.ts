@@ -10,36 +10,46 @@ export default class ProductsController {
     const perPage = 9
 
     const search = request.input('search', '').trim()
-  const categoryId = request.input('category')
+    const categoryId = request.input('category')
 
-  const query = Product.query().preload('category')
+    const query = Product.query().preload('category')
 
-  if (search) 
-    {
-        query.whereRaw('LOWER(name) LIKE ?', [`%${search.toLowerCase()}%`])
+    if (search) 
+        {
+            query.whereRaw('LOWER(name) LIKE ?', [`%${search.toLowerCase()}%`])
+        }
+
+    if (categoryId) {
+        query.where('category_id', categoryId)
     }
 
-  if (categoryId) {
-    query.where('category_id', categoryId)
-  }
+    const paginator = await query.paginate(page, perPage)
+    paginator.baseUrl('/')
 
-  const paginator = await query.paginate(page, perPage)
-  paginator.baseUrl('/')
+    const products = paginator.all() // Only the products array
+    const categories = await Category.all()
 
-  const products = paginator.all() // Only the products array
-  const categories = await Category.all()
+    return view.render('components/home', {
+        products,
+        pagination: paginator, // 
+        categories,
+        search,
+        categoryId,
+        user: auth.user,
+        csrfToken
+        })
+    }
 
-  return view.render('components/home', {
-    products,
-    pagination: paginator, // 
-    categories,
-    search,
-    categoryId,
-    user: auth.user,
-    csrfToken
+    public async dashboard({ view, auth }: HttpContext) {
+    const products = await Product.query().preload('category')
+    const categories = await Category.all()
+
+    return view.render('pages/dashboard', {
+        products,
+        categories,
+        user: auth.user,
     })
-}
-
+    }
 
     async create({ view, request }: HttpContext) {
         const csrfToken = request.csrfToken
