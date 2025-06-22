@@ -26,6 +26,18 @@
         @endif
       </div>
 
+      <div>
+        <label>Category:</label>
+        <select name="category_id" required>
+          @each(category in categories)
+            <option value="{{ category.id }}" {{ category.id === product.categoryId ? 'selected' : '' }}>
+              {{ category.name }}
+            </option>
+          @endeach
+        </select>
+    </div>
+
+
       <button type="submit">Update</button>
     </form>
   @endslot
