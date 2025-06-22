@@ -31,7 +31,7 @@ export default class ProductsController {
             imagePath = `/uploads/${fileName}`
         }
 
-        const data = request.only(['name', 'price', 'description', 'image_url'])
+        const data = request.only(['name', 'price', 'description', 'image_url', 'category_id'])
         await Product.create({ ...data, image_url: imagePath })
 
         session.flash('success', 'Product created successfully!')
@@ -59,7 +59,7 @@ export default class ProductsController {
             return response.redirect().toRoute('dashboard')
         }
 
-        const data = request.only(['name', 'price', 'description', 'image_url'])
+        const data = request.only(['name', 'price', 'description', 'image_url', 'category_id'])
 
         const image = request.file('image', {
             size: '2mb',
