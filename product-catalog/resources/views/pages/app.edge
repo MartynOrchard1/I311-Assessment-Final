@@ -4,6 +4,16 @@
     <title>Product Catalog</title>
 </head>
 <body>
-    
+    <nav>
+        <a href="/">Home</a>
+        @if(auth?.user)
+        <form action="POST" action="/logout" style="display: inline;">
+            @csrf
+            <button type="submit">Logout</button>
+        </form>
+        @else
+        <a href="/login">Login</a>
+        @endif
+    </nav>
 </body>
 </html>
