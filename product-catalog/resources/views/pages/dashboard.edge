@@ -9,6 +9,7 @@
   <table border="1">
     <tr>
       <th>Name</th>
+      <th>Category</th>
       <th>Price</th>
       <th>Description</th>
       <th>|</th>
@@ -19,6 +20,7 @@
     @each(product in products)
       <tr>
         <td>{{ product.name }}</td>
+        <td>{{ product.category?.name || 'No Category' }}</td>
         <td>${{ product.price }}</td>
         <td>{{ product.description }}</td>
         <td>|</td>

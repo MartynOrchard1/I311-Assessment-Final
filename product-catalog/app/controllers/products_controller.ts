@@ -6,7 +6,7 @@ import Category from '#models/category'
 
 export default class ProductsController {
     async index({ view, request }: HttpContext) {
-        const products = await Product.all()
+        const products = await Product.query().preload('category')
         const csrfToken = request.csrfToken
         return view.render('pages/dashboard', { products, csrfToken })
     }

@@ -21,7 +21,7 @@ export default class Product extends BaseModel {
   declare image_url: string 
 
   @column()
-  public category_id!: number
+  declare categoryId: number | null
 
   @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>
