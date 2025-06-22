@@ -38,7 +38,6 @@ router.get('/dashboard', '#controllers/products_controller.index')
   .as('dashboard')
   .use(middleware.auth())
 
-
 // Create form
 router.get('/products/create', '#controllers/products_controller.create')
   .as('products.create')

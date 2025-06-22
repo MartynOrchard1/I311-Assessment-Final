@@ -16,12 +16,12 @@ export default class AuthController {
         const user = await User.findBy('email', email)
 
         if (!user) {
-            console.log(`❌ User not found: ${email}`)
+            console.log(`User not found: ${email}`)
             session.flash('errors', { email: 'Invalid email or password' })
             return response.redirect().back()
         }
 
-        // 🔍 Debugging output
+        // Debugging output
         console.log('Stored hash:', user.password)
 
         const isValid = await user.verifyPassword(password)
