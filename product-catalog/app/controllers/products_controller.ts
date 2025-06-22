@@ -28,15 +28,14 @@ export default class ProductsController {
     }
 
     async edit({ params, view, response }: HttpContext) {
-        const product = await Product.find(params.id)
+    const product = await Product.find(params.id)
 
-        if (!product) {
-            return response.redirect().toRoute('dashboard') // Or render 404 if preferred
-        }
-
-        return view.render('pages/products/edit', { product })
+    if (!product) {
+        return response.redirect().toRoute('dashboard') // Optional: render 404
     }
 
+    return view.render('pages/products/edit', { product })
+    }
 
     async update({ params, request, response, session }: HttpContext) {
         const product = await Product.find(params.id)
