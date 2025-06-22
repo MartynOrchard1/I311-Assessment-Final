@@ -18,12 +18,11 @@ export default class ProductsController {
     }
 
     async store({ request, response, session }: HttpContext) {
-        const image = request.file('image', {
-            size: '2mb',
-            extnames: ['jpg', 'png', 'jpeg'],
-        })
+        const data = request.only(['name', 'price', 'description', 'category_id'])
 
-        let imagePath: string | undefined = undefined
+        // Handle image upload
+        const image = request.file('image')
+        let imagePath = ''
 
         if (image) {
             const fileName = `${cuid()}.${image.extname}`
@@ -31,8 +30,7 @@ export default class ProductsController {
             imagePath = `/uploads/${fileName}`
         }
 
-        const data = request.only(['name', 'price', 'description', 'image_url', 'category_id'])
-        await Product.create({ ...data, image_url: imagePath })
+        await Product.create({ ...data, imageUrl: imagePath })
 
         session.flash('success', 'Product created successfully!')
         return response.redirect().toRoute('dashboard')
