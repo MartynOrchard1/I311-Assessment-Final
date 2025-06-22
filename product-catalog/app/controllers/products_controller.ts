@@ -5,42 +5,38 @@ import Category from '#models/category'
 
 export default class ProductsController {
 public async index({ view, request, auth }: HttpContext) {
-    const csrfToken = request.csrfToken
     const page = request.input('page', 1)
-    const perPage = 9 // Customize how many products per page
+    const perPage = 9
 
     const search = request.input('search', '').trim()
     const categoryFilter = request.input('category', '')
 
-    // Build base query
-    const query = Product.query()
-      .preload('category') // preload associated category for display
+    const query = Product.query().preload('category')
 
-    // Apply filters if any
     if (search) {
-      query.where('name', 'ILIKE', `%${search}%`) // PostgreSQL friendly, or use 'LIKE' for MySQL
+      query.where('name', 'ILIKE', `%${search}%`)
     }
 
     if (categoryFilter) {
-      query.whereHas('category', (catQuery) => {
-        catQuery.where('name', categoryFilter)
-      })
+      query.where('categoryId', categoryFilter)
     }
 
-    // Execute paginated query
-    const products = await query.paginate(page, perPage)
-    products.baseUrl('/')
+    const paginatedProducts = await query.paginate(page, perPage)
+    paginatedProducts.baseUrl('/')
 
-    // Get all categories for the filter dropdown
+    const products = paginatedProducts.all() // Convert to array
+    const pagination = paginatedProducts.getMeta() // Extract metadata
+
     const categories = await Category.all()
 
     return view.render('components/home', {
       products,
+      pagination,
       categories,
       search,
       categoryFilter,
-      csrfToken,
       user: auth.user,
+      csrfToken: request.csrfToken,
     })
   }
 
