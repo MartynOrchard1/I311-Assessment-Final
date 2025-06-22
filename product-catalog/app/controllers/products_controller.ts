@@ -3,13 +3,44 @@ import { cuid } from '@adonisjs/core/helpers'
 import Product from '#models/product'
 import Category from '#models/category'
 
-
 export default class ProductsController {
-    async index({ view, request }: HttpContext) {
-        const products = await Product.query().preload('category')
-        const csrfToken = request.csrfToken
-        return view.render('pages/dashboard', { products, csrfToken })
+public async index({ view, request, auth }: HttpContext) {
+    const page = request.input('page', 1)
+    const perPage = 9 // Customize how many products per page
+
+    const search = request.input('search', '').trim()
+    const categoryFilter = request.input('category', '')
+
+    // Build base query
+    const query = Product.query()
+      .preload('category') // preload associated category for display
+
+    // Apply filters if any
+    if (search) {
+      query.where('name', 'ILIKE', `%${search}%`) // PostgreSQL friendly, or use 'LIKE' for MySQL
     }
+
+    if (categoryFilter) {
+      query.whereHas('category', (catQuery) => {
+        catQuery.where('name', categoryFilter)
+      })
+    }
+
+    // Execute paginated query
+    const products = await query.paginate(page, perPage)
+    products.baseUrl('/')
+
+    // Get all categories for the filter dropdown
+    const categories = await Category.all()
+
+    return view.render('pages/home', {
+      products: products.toJSON(),
+      categories,
+      search,
+      categoryFilter,
+      user: auth.user,
+    })
+  }
 
     async create({ view, request }: HttpContext) {
         const csrfToken = request.csrfToken

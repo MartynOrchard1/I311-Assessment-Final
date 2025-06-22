@@ -26,7 +26,12 @@ import { middleware } from '#start/kernel'
 // })
 
 // Home Page - DEFAULT ROUTE
-router.on('/').render('pages/home')
+// router.on('/').render('pages/home')
+
+router.get('/', '#controllers/products_controller.index').as('home') // Home route
+router.get('/products/:id', '#controllers/products_controller.show').as('products.show')
+
+
 
 // Login Routes
 router.get('/login', [() => import('#controllers/auth_controller'), 'showLogin'])
