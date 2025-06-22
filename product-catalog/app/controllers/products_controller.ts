@@ -7,9 +7,11 @@ export default class ProductsController {
         return view.render('pages/dashboard', { products })
     }
 
-    async create({ view }: HttpContext) {
-        return view.render('pages/products/create')
+    async create({ view, request }: HttpContext) {
+    const csrfToken = request.csrfToken
+    return view.render('pages/products/create', { csrfToken })
     }
+
 
     async store({ request, response, session }: HttpContext) {
         const data = request.only(['name', 'price', 'image_url']) 
